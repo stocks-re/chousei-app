@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['title', 'creatorName', 'candidates', 'responses', 'status']);
+      allow update: if request.resource.data.title == resource.data.title
+                    && request.resource.data.creatorName == resource.data.creatorName;
+    }
+
+    match /calendarTokens/{tokenId} {
+      allow read, write: if false;
+    }
+  }
+}
